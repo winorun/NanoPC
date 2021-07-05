@@ -1,0 +1,56 @@
+= AsciiDoc Article Template
+
+.PC_STATUS
+|===
+| PC_STATUS_ZERO_FLAG         | 0x01;// a == b
+| PC_STATUS_NEGATIVE_FLAG     | 0x02;// a < b
+| PC_STATUS_POSITIVE_FLAG     | 0x04;// a > b
+| PC_STATUS_NOT_ZERO_FLAG     | 0x08;
+| PC_STATUS_CARRY_FLAG        | 0x10;
+| PC_STATUS_KEYBOARD_ENABLE   | 0x20;
+| PC_STATUS_NODEFINE_COMMAND  | 0x40;
+| PC_STATUS_CRITICAL_ERROR    | 0x80;
+|===
+
+.Command
+[%header]
+|===
+| comand | command | description
+| 0x1xx  | mov     | mov
+| 0x2xx  | add     | add
+| 0x3xx  | sub     | sub
+| 0x4xx  | cmp     | cmp
+| 0x5xx  | je      |  
+| 0x6xx  | jne     |  
+| 0x7xx  | joe     |  
+| 0x8xx  | and     |  
+| 0x9xx  | xor     |  
+| 0xAxx  |  or     |  
+| 0xBxx  | rol     |  
+| 0xCxx  | ror     |  
+| 0xDxx  | jsr     |  
+| 0xExx  | pull    |  
+| 0xFxx  | push    |  
+|===
+
+.default opt
+|===
+| hex |    | 
+| 0   | 00 | 00
+| 1   | 00 | 01
+| 2   | 00 | 10
+| 3   | 00 | 11
+| 4   | 01 | 00 
+| 5   | 01 | 01 
+| 6   | 01 | 10 
+| 7   | 01 | 11 
+| 8   | 10 | 00
+| 9   | 10 | 01
+| A   | 10 | 10
+| B   | 10 | 11
+| C   | 11 | 00
+| D   | 11 | 01
+| E   | 11 | 10
+| F   | 11 | 11
+|===
+

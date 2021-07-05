@@ -1,0 +1,6 @@
+bin
+*.bin
+*.swp
+buld
+build
+CMakeLists.txt.user
