@@ -2,12 +2,13 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <gui_sdl.h>
+//#include <gui_sdl.h>
 
 namespace po=boost::program_options;
 
 #include <core.h>
 #include "ui.h"
+#include "uincurses.h"
 
 int main(int argc, char *argv[])
 {
@@ -44,24 +45,23 @@ int main(int argc, char *argv[])
         }
     }
 
-    auto *app = new GuiSdl();
+    auto *ui = new UINcurses();
 
-    std::vector<SDL_DisplayMode> mResolutions = app->getAllDisplayMode();
-
+    //std::vector<SDL_DisplayMode> mResolutions = app->getAllDisplayMode();
+/*
     if(vm.count("show")){
         app->printDisplayMode(mResolutions);
         return 0;
     }
 
     app->init(mResolutions[0]);
+*/
     reg[REG_PROGRAM_COUNTER]=START_PROGRAMM_MEMORY;
-    while(runOneStep())
+    while(runOneStep(ui->uiKeybord()))
     {
-        app->drawSDLWindow(0);
-        if(!app->delay())break;
-        usleep(7000);
+        ui->drawWindows();
+        usleep(700000);
     }
-    clearConsole();
-    drawConWindow(0);
-    delete app;
+
+    delete ui;
 }

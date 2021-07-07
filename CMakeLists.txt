@@ -13,8 +13,8 @@ find_package(Boost COMPONENTS program_options unit_test_framework REQUIRED)
 #include_directories(${LUA_INCLUDE_DIR})
 
 
-#option(USE_SDL_LIBRARY "Do you want to use an sdl2 library?" OFF)
-option(USE_SDL_LIBRARY "Do you want to use an sdl2 library?" ON)
+option(USE_SDL_LIBRARY "Do you want to use an sdl2 library?" OFF)
+#option(USE_SDL_LIBRARY "Do you want to use an sdl2 library?" ON)
 
 IF(USE_SDL_LIBRARY)
     find_package(SDL2 REQUIRED)
@@ -26,6 +26,10 @@ IF(USE_SDL_LIBRARY)
 ELSE(USE_SDL_LIBRARY)
     message(STATUS "INFO: Selected console user interface")
 ENDIF(USE_SDL_LIBRARY)
+
+set(CURSES_NEED_WIDE TRUE)
+find_package(Curses REQUIRED)
+include_directories(${CURSES_INCLUDE_DIR})
 
 find_package(Doxygen)
 IF(DOXYGEN_FOUND)
@@ -45,7 +49,8 @@ include_directories("headers")
 
 add_executable(${PROJECT_NAME} ${SOURCE})
 target_link_libraries(${PROJECT_NAME} 
-                    ${LUA_LIBRARIES} 
+                    ${LUA_LIBRARIES}
+                    ${CURSES_LIBRARY}
                     ${Boost_LIBRARIES} 
                     ${SDL2TTF_LIBRARIES} 
                     ${SDL2_LIBRARIES} 

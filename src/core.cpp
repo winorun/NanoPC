@@ -111,11 +111,11 @@ void cmd_add(TwoOpt opt){
 }
 
 void cmd_rol(TwoOpt opt){
-    *opt.opt1=*opt.opt1 << *opt.opt2;
+    *opt.opt1 = *opt.opt1 << *opt.opt2;
 }
 
 void cmd_ror(TwoOpt opt){
-    *opt.opt1=*opt.opt1 >> *opt.opt2;
+    *opt.opt1 = *opt.opt1 >> *opt.opt2;
 }
 
 void cmd_xor(TwoOpt opt){
@@ -165,11 +165,26 @@ void other_cmd(unsigned char cmd){
     reg[REG_PC_STATUS] |= PC_STATUS_NODEFINE_COMMAND | PC_STATUS_CRITICAL_ERROR;
 }
 
+void interruptRun(unsigned char vector){
+    if(reg[REG_PC_STATUS] & PC_CONTROL_INTERRUPT_ENABLE )
+        return;
+
+}
+
 bool delay(){
     return true;
 }
 
-bool runOneStep(){
+bool runOneStep(unsigned char ch){
+    if(!ch)return false;
+
+    if(ch > 32 ){
+        reg[REG_KEYBORD_CHAR] = ch;
+        if(reg[REG_PC_STATUS] & PC_CONTROL_KEYBORD_INTERRUPT_ENABLE )
+            interruptRun(reg[REG_KEYBORD_VECTOR]);
+    }
+
+
     unsigned char &ncmd = reg[REG_PROGRAM_COUNTER];
     if(memory[ncmd]==0x01)return false;
     if(memory[ncmd]==0x02)return true;
