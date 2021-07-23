@@ -1,22 +1,71 @@
-= AsciiDoc Article Template
+= NanoPC
 
-.PC_STATUS
+.Регистры
+[%header]
 |===
-| PC_STATUS_ZERO_FLAG         | 0x01;// a == b
-| PC_STATUS_NEGATIVE_FLAG     | 0x02;// a < b
-| PC_STATUS_POSITIVE_FLAG     | 0x04;// a > b
-| PC_STATUS_NOT_ZERO_FLAG     | 0x08;
-| PC_STATUS_CARRY_FLAG        | 0x10;
-| PC_STATUS_KEYBOARD_ENABLE   | 0x20;
-| PC_STATUS_NODEFINE_COMMAND  | 0x40;
-| PC_STATUS_CRITICAL_ERROR    | 0x80;
+| Адресс регистра | Название | Описание
+| 0xF | PC | Program counter
+| 0xE | PS | PC status     
+| 0xD | RC | PC control    
+| 0xC | KC | Keybord char  
+| 0xB | KV | Keybord vector
+| 0xA | TD | Timer data    
+| 0x9 | TV | Timer vector  
+| 0x8 | SD | SPI data      
+| 0x7 | SV | SPI vector    
+| 0x6 | SP | Stack header   
 |===
 
-.Command
+.Операнты
+|===
+| 0000 | 0 | K  , K
+| 0001 | 1 | Rx , K  
+| 0010 | 2 | @Rx, K
+| 0011 | 3 | *Rx, K
+| 0100 | 4 | K  , Rx
+| 0101 | 5 | Rx , Rx 
+| 0110 | 6 | @Rx, Rx
+| 0111 | 7 | *Rx, Rx
+| 1000 | 8 | K  , @Rx
+| 1001 | 9 | Rx , @Rx
+| 1010 | A | @Rx, @Rx
+| 1011 | B | *Rx, @Rx
+| 1100 | C | K  , *Rx
+| 1101 | D | Rx , *Rx  
+| 1110 | E | @Rx, *Rx
+| 1111 | F | *Rx, *Rx
+|===
+
+.Регистр статуса
+|===
+| ZERO_FLAG         | 0x01 | a == b
+| NEGATIVE_FLAG     | 0x02 | a < b
+| POSITIVE_FLAG     | 0x04 | a > b
+| CARRY_FLAG        | 0x08 | Переполнение
+| CARRY_TIMER_FLAG  | 0x10 | Переполнение таймера
+| SPI_FLAG          | 0x20 | SPI Обменял байты 
+| NODEFINE_COMMAND  | 0x40 | Ошибка распознования команды
+| CRITICAL_ERROR    | 0x80 | Критическая ошибка
+|===
+
+.Регистр управления
+|===
+| INTERRUPT_ENABLE         | 0x01
+| KEYBORD_INTERRUPT_ENABLE | 0x02
+| TIMER_INTERRUPT_ENABLE   | 0x04
+| SPI_INTERRUPT_ENABLE     | 0x08
+| SPI_ENABLE               | 0x10
+|                          | 0x20
+| TIMER_TAKT               | 0x40
+| TIMER_MSEC               | 0x80
+| TIMER_SEC                | 0xC0
+|===
+
+.Команды
 [%header]
 |===
 | comand | command | description
-| 0x1xx  | mov     | mov
+| 0x1aa  | mov     | mov
 | 0x2xx  | add     | add
 | 0x3xx  | sub     | sub
 | 0x4xx  | cmp     | cmp
@@ -31,26 +80,5 @@
 | 0xDxx  | jsr     |  
 | 0xExx  | pull    |  
 | 0xFxx  | push    |  
-|===
-
-.default opt
-|===
-| hex |    | 
-| 0   | 00 | 00
-| 1   | 00 | 01
-| 2   | 00 | 10
-| 3   | 00 | 11
-| 4   | 01 | 00 
-| 5   | 01 | 01 
-| 6   | 01 | 10 
-| 7   | 01 | 11 
-| 8   | 10 | 00
-| 9   | 10 | 01
-| A   | 10 | 10
-| B   | 10 | 11
-| C   | 11 | 00
-| D   | 11 | 01
-| E   | 11 | 10
-| F   | 11 | 11
 |===
 

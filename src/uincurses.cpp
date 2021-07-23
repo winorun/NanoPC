@@ -10,10 +10,11 @@ UINcurses::UINcurses()
     noecho();
     keypad(stdscr,true);
     curs_set(0);
-    halfdelay(4);
+    halfdelay(1);
     win_reg     = newwin(5,58,20,0);
     win_memory  = newwin(20,58,0,0);
     win_graphic = newwin(18,10,2,59);
+    win_displ   = newwin(5,18,26,0);
 
 }
 
@@ -35,12 +36,13 @@ void UINcurses::drawWindows(){
     drawWindowsReg();
     drawWindowsMemory();
     drawWindowsGDisplay();
+    drawWindowsDisplay();
 }
 
 void UINcurses::drawWindowsReg(){
     wmove(win_reg,0,0);
     wprintw(win_reg,"╔════╤═════════════════════════╤═════════════════════════╗");
-    wprintw(win_reg,"║REG | 00 01 02 03 04 05 06 SV | SD TV TD KV KC RC PS PC ║");
+    wprintw(win_reg,"║REG | 00 01 02 03 04 05 SP SV | SD TV TD KV KC RC PS PC ║");
     wprintw(win_reg,"╠════╪═════════════════════════╪═════════════════════════╣");
     wprintw(win_reg,"║    |                         |                         ║");
     wprintw(win_reg,"╚════╧═════════════════════════╧═════════════════════════╝");
@@ -73,9 +75,26 @@ void UINcurses::drawWindowsMemory(){
     wrefresh(win_memory);
 }
 
+void UINcurses::drawWindowsDisplay(){
+    char str[17];
+    str[16] = 0;
+    box(win_displ,0,0);
+    wmove(win_displ,0,0);
+    wprintw(win_displ,"╔═ DISPLAY ══════╗");
+    wprintw(win_displ,"║0123456789ABCDEF║");
+    wprintw(win_displ,"╠════════════════╣");
+    for (int i=0;i<0x10;i++){
+        str[i] = (memory[i]>31 & memory[i]<128)?(char ) memory[i]:' ';
+    }
+    wprintw(win_displ,"║%s║",str);
+    wprintw(win_displ,"╚════════════════╝");
+    wrefresh(win_displ);
+}
+
 void UINcurses::drawWindowsGDisplay(){
     auto spaceChar="□";
     auto trueChar="■";
+    wmove(win_graphic,0,0);
     wprintw(win_graphic,"╔ DISP ══╗");
     for (int i = 0; i < 0x10; ++i) {
         waddstr(win_graphic,"║");

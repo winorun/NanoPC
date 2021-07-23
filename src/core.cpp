@@ -166,9 +166,8 @@ void other_cmd(unsigned char cmd){
 }
 
 void interruptRun(unsigned char vector){
-    if(reg[REG_PC_STATUS] & PC_CONTROL_INTERRUPT_ENABLE )
-        return;
-
+    if(reg[REG_PC_STATUS] & PC_CONTROL_INTERRUPT_ENABLE ){
+    }
 }
 
 bool delay(){

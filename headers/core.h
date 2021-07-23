@@ -16,6 +16,7 @@ const unsigned char REG_TIMER_DATA      = 0xA;//TD
 const unsigned char REG_TIMER_VECTOR    = 0x9;//TV
 const unsigned char REG_SPI_DATA        = 0x8;//SD
 const unsigned char REG_SPI_VECTOR      = 0x7;//SV
+const unsigned char REG_STACK_POINT     = 0x6;//SP
 
 
 /*
@@ -29,14 +30,14 @@ WCOL (Write COLlision Flag) – флаг конфликта, или коллиз
 */
 
 //PC_STATUS
-const unsigned char PC_STATUS_ZERO_FLAG=0x01;// a == b
-const unsigned char PC_STATUS_NEGATIVE_FLAG=0x02;// a < b
-const unsigned char PC_STATUS_POSITIVE_FLAG=0x04;// a > b
-const unsigned char PC_STATUS_CARRY_FLAG=0x08;
-const unsigned char PC_STATUS_CARRY_TIMER_FLAG=0x10;
-const unsigned char PC_STATUS_SPI_FLAG=0x20;
-const unsigned char PC_STATUS_NODEFINE_COMMAND=0x40;
-const unsigned char PC_STATUS_CRITICAL_ERROR=0x80;
+const unsigned char PC_STATUS_ZERO_FLAG        = 0x01;// a == b
+const unsigned char PC_STATUS_NEGATIVE_FLAG    = 0x02;// a < b
+const unsigned char PC_STATUS_POSITIVE_FLAG    = 0x04;// a > b
+const unsigned char PC_STATUS_CARRY_FLAG       = 0x08;
+const unsigned char PC_STATUS_CARRY_TIMER_FLAG = 0x10;
+const unsigned char PC_STATUS_SPI_FLAG         = 0x20;
+const unsigned char PC_STATUS_NODEFINE_COMMAND = 0x40;
+const unsigned char PC_STATUS_CRITICAL_ERROR   = 0x80;
 
 //PC_CONTROL
 const unsigned char PC_CONTROL_INTERRUPT_ENABLE         = 0x01;

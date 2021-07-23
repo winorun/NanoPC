@@ -14,10 +14,12 @@ public:
     void drawWindowsReg();
     void drawWindowsGDisplay();
     void drawWindowsMemory();
+    void drawWindowsDisplay();
 private:
     WINDOW *win_reg;
     WINDOW *win_memory;
     WINDOW *win_graphic;
+    WINDOW *win_displ;
 };
 
 #endif // UINCURSES_H

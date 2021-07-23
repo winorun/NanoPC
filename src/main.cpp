@@ -60,8 +60,9 @@ int main(int argc, char *argv[])
     while(runOneStep(ui->uiKeybord()))
     {
         ui->drawWindows();
-        usleep(700000);
+ //       usleep(300000);
     }
 
+    usleep(3000000);
     delete ui;
 }
