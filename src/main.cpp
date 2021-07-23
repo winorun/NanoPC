@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
 
     auto *ui = new UINcurses(vm.count("step"));
     reg[REG_PROGRAM_COUNTER]=START_PROGRAMM_MEMORY;
+    ui->drawWindows();
     while(runOneStep(ui->uiKeybord()))
     {
         ui->drawWindows();
