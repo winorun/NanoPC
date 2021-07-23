@@ -1,20 +1,22 @@
 #include "uincurses.h"
+#include <ncurses.h>
 #include <locale.h>
 #include "core.h"
 
-
-UINcurses::UINcurses()
+UINcurses::UINcurses(bool step)
 {
     setlocale(LC_ALL, "");
     initscr();
     noecho();
+    cbreak();
     keypad(stdscr,true);
     curs_set(0);
-    halfdelay(1);
+    timeout(step?-1:0);
     win_reg     = newwin(5,58,20,0);
     win_memory  = newwin(20,58,0,0);
     win_graphic = newwin(18,10,2,59);
     win_displ   = newwin(5,18,26,0);
+    win_status  = newwin(5,13,26,20);
 
 }
 
@@ -27,7 +29,7 @@ unsigned char UINcurses::uiKeybord(){
     switch (ch) {
         case KEY_F(2): return 0;
     }
-    if(ch > 31 && ch < 128) return (unsigned char)ch;
+    if(ch >= 0x20 && ch < 0x7f) return (unsigned char)ch;
     return 1;
 }
 
@@ -37,6 +39,18 @@ void UINcurses::drawWindows(){
     drawWindowsMemory();
     drawWindowsGDisplay();
     drawWindowsDisplay();
+    drawWindowsStatus();
+}
+
+void UINcurses::exit(){
+    refresh();
+    drawWindowsReg();
+    drawWindowsMemory();
+    drawWindowsGDisplay();
+    drawWindowsDisplay();
+    drawWindowsStatus();
+    timeout(-1);
+    getch();
 }
 
 void UINcurses::drawWindowsReg(){
@@ -52,6 +66,22 @@ void UINcurses::drawWindowsReg(){
         wprintw(win_reg,"%02X ",reg[i]);
     }
     wrefresh(win_reg);
+}
+
+void UINcurses::drawWindowsStatus(){
+    char str[9];
+    str[8] = 0;
+    box(win_status,0,0);
+    wmove(win_status,0,0);
+    wprintw(win_status,"╔═ STATUS ══╗");
+    wprintw(win_status,"║  EDSTCPNZ ║");
+    wprintw(win_status,"╠═══════════╣");
+    for (int y(0),i(0x80);i>0;i/= 0x02,y++){
+        str[y] = ( reg[REG_PC_STATUS] & i )?(char ) '1':'0';
+    }
+    wprintw(win_status,"║  %08s ║",str);
+    wprintw(win_status,"╚═══════════╝");
+    wrefresh(win_status);
 }
 
 void UINcurses::drawWindowsMemory(){

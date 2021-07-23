@@ -46,7 +46,7 @@ void setFlagsZNP(unsigned char byte){
         *status &= ~PC_STATUS_NEGATIVE_FLAG;
     }
 
-    if(!(byte & 0b10000000)){
+    if(!(byte & 0b10000000)&&(byte != 0)){
         *status |= PC_STATUS_POSITIVE_FLAG;
     }else{
         *status &= ~PC_STATUS_POSITIVE_FLAG;
@@ -184,7 +184,7 @@ bool delay(){
 bool runOneStep(unsigned char ch){
     if(!ch)return false;
 
-    if(ch > 32 ){
+    if(ch >= 32 ){
         reg[REG_KEYBORD_CHAR] = ch;
         if(reg[REG_PC_STATUS] & PC_CONTROL_KEYBORD_INTERRUPT_ENABLE )
             interruptRun(reg[REG_KEYBORD_VECTOR]);

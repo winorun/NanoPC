@@ -5,6 +5,7 @@ class UIBase {
 public:
     virtual void drawWindows() = 0;
     virtual unsigned char uiKeybord() = 0;
+    virtual void exit()=0;
     virtual ~UIBase(){};
 };
 

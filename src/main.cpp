@@ -16,9 +16,10 @@ int main(int argc, char *argv[])
     desc.add_options()
         ("help,h", "produce help message")
         ("debug,d", "set debug mode")
+        ("step,s", "set one step mode")
         ("bios,b",po::value<std::string>(), "set bios image file (size:256 byte)")
-        ("show,s", "show all display mode")
-        ("mode,m", "set display mode")
+//        ("show,s", "show all display mode")
+//        ("mode,m", "set display mode")
     ;
 
     po::variables_map vm;
@@ -45,24 +46,13 @@ int main(int argc, char *argv[])
         }
     }
 
-    auto *ui = new UINcurses();
-
-    //std::vector<SDL_DisplayMode> mResolutions = app->getAllDisplayMode();
-/*
-    if(vm.count("show")){
-        app->printDisplayMode(mResolutions);
-        return 0;
-    }
-
-    app->init(mResolutions[0]);
-*/
+    auto *ui = new UINcurses(vm.count("step"));
     reg[REG_PROGRAM_COUNTER]=START_PROGRAMM_MEMORY;
     while(runOneStep(ui->uiKeybord()))
     {
         ui->drawWindows();
  //       usleep(300000);
     }
-
-    usleep(3000000);
+    ui->exit();
     delete ui;
 }
