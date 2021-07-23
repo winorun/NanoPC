@@ -32,6 +32,27 @@ TwoOpt getTwoOpt(const unsigned char &i){
     return {opt1,opt2};
 }
 
+void setFlagsZNP(unsigned char byte){
+     unsigned char * const status = &reg[REG_PC_STATUS];
+    if(byte == 0){
+        *status |= PC_STATUS_ZERO_FLAG;
+    }else{
+        *status &= ~PC_STATUS_ZERO_FLAG;
+    }
+
+    if(byte & 0b10000000){
+        *status |= PC_STATUS_NEGATIVE_FLAG;
+    }else{
+        *status &= ~PC_STATUS_NEGATIVE_FLAG;
+    }
+
+    if(!(byte & 0b10000000)){
+        *status |= PC_STATUS_POSITIVE_FLAG;
+    }else{
+        *status &= ~PC_STATUS_POSITIVE_FLAG;
+    }   
+}
+
 OneOpt getOneOpt(const unsigned char i){
     const unsigned char cmdb = memory[i]%0x10;
     unsigned char cmp = cmdb/0b100; 
@@ -71,24 +92,8 @@ void cmd_je(TwoOpt opt){
 }
 
 void cmd_cmp(TwoOpt opt){
-    unsigned char * const status = &reg[REG_PC_STATUS];
-    if(*opt.opt1 == *opt.opt2){
-        *status |= PC_STATUS_ZERO_FLAG;
-    }else{
-        *status &= ~PC_STATUS_ZERO_FLAG;
-    }
-
-    if(*opt.opt1 < *opt.opt2){
-        *status |= PC_STATUS_NEGATIVE_FLAG;
-    }else{
-        *status &= ~PC_STATUS_NEGATIVE_FLAG;
-    }
-
-    if(*opt.opt1 > *opt.opt2){
-        *status |= PC_STATUS_POSITIVE_FLAG;
-    }else{
-        *status &= ~PC_STATUS_POSITIVE_FLAG;
-    }
+    unsigned char byte = *opt.opt1 - *opt.opt2;
+    setFlagsZNP(byte);
 }
 void cmd_sub(TwoOpt opt){
     if(*opt.opt1<*opt.opt2){
@@ -97,7 +102,8 @@ void cmd_sub(TwoOpt opt){
         //!@todo reg[REG_PC_STATUS] - установить флаг в ноль 
         reg[REG_PC_STATUS] &= ~PC_STATUS_CARRY_FLAG;
     }
-    *opt.opt1-=*opt.opt2;    
+    *opt.opt1-=*opt.opt2;
+    setFlagsZNP(*opt.opt1);   
 }
 
 void cmd_add(TwoOpt opt){
@@ -108,6 +114,7 @@ void cmd_add(TwoOpt opt){
         //!@todo reg[REG_PC_STATUS] - установить флаг в ноль 
         reg[REG_PC_STATUS] &= ~PC_STATUS_CARRY_FLAG;
     }
+    setFlagsZNP(*opt.opt1);
 }
 
 void cmd_rol(TwoOpt opt){
