@@ -28,8 +28,12 @@ unsigned char UINcurses::uiKeybord(){
     int ch = getch();
     switch (ch) {
         case KEY_F(2): return 0;
+        case ERR : return 1;
+        case KEY_BACKSPACE: return 0x08;
+        case 0x0A: return 0x0A;
     }
-    if(ch >= 0x20 && ch < 0x7f) return (unsigned char)ch;
+    if(ch >= 0x20 && ch < 0x80) 
+        return (unsigned char)ch;
     return 1;
 }
 
@@ -122,8 +126,8 @@ void UINcurses::drawWindowsDisplay(){
 }
 
 void UINcurses::drawWindowsGDisplay(){
-    auto spaceChar="□";
-    auto trueChar="■";
+    auto spaceChar=" ";//"⎕";
+    auto trueChar="⏺";
     wmove(win_graphic,0,0);
     wprintw(win_graphic,"╔ DISP ══╗");
     for (int i = 0; i < 0x10; ++i) {

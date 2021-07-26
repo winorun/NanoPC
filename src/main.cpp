@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
         std::ifstream in(bios_filename, std::ios::binary);
         if(in.is_open()){
             memset(memory, 0, sizeof memory);
-            in.get((char *)(memory),256);
+            in.read((char *)(memory),256);
             in.close();
         }else{
             std::cout << "file: " << bios_filename << " err\n";

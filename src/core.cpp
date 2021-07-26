@@ -173,7 +173,10 @@ void other_cmd(unsigned char cmd){
 }
 
 void interruptRun(unsigned char vector){
-    if(reg[REG_PC_STATUS] & PC_CONTROL_INTERRUPT_ENABLE ){
+    if(reg[REG_PC_CONTROL] & PC_CONTROL_INTERRUPT_ENABLE ){
+        reg[REG_STACK_POINT]++;
+        memory[reg[REG_STACK_POINT]]=reg[REG_PROGRAM_COUNTER];
+        reg[REG_PROGRAM_COUNTER]=vector;
     }
 }
 
@@ -184,10 +187,13 @@ bool delay(){
 bool runOneStep(unsigned char ch){
     if(!ch)return false;
 
-    if(ch >= 32 ){
+    if(ch >= 2 ){
         reg[REG_KEYBORD_CHAR] = ch;
-        if(reg[REG_PC_STATUS] & PC_CONTROL_KEYBORD_INTERRUPT_ENABLE )
+        if(reg[REG_PC_CONTROL] & PC_CONTROL_KEYBORD_INTERRUPT_ENABLE )
+        {
             interruptRun(reg[REG_KEYBORD_VECTOR]);
+            return true;
+        }
     }
 
 
