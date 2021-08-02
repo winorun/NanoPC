@@ -1,5 +1,6 @@
 #include <cstdio>
 #include "core.h"
+#include <spi.h>
 
 unsigned char memory[256]={'h','e','l','l','o',' ','w','o','r','l','d',0,0,0,0,0,0,1};
 unsigned char reg[0x20]={};
@@ -174,13 +175,43 @@ void other_cmd(unsigned char cmd){
 
 void interruptRun(unsigned char vector){
     if(reg[REG_PC_CONTROL] & PC_CONTROL_INTERRUPT_ENABLE ){
+        reg[REG_PC_CONTROL] &= ~PC_CONTROL_INTERRUPT_ENABLE;
         reg[REG_STACK_POINT]++;
         memory[reg[REG_STACK_POINT]]=reg[REG_PROGRAM_COUNTER];
         reg[REG_PROGRAM_COUNTER]=vector;
     }
 }
 
+bool timer_tik(){
+    unsigned char timer_status = reg[REG_PC_CONTROL] & 0xC0;
+    if(timer_status == PC_CONTROL_TIMER_TAKT){
+        reg[REG_TIMER_DATA]++;
+        if(reg[REG_TIMER_DATA] == 0){
+            reg[REG_PC_STATUS] |= PC_STATUS_CARRY_TIMER_FLAG;
+            return true;
+        }else{
+            reg[REG_PC_STATUS] &= ~PC_STATUS_CARRY_TIMER_FLAG;
+            return false;
+        }
+    }
+    return false;
+}
+
 bool delay(){
+    if(timer_tik()){
+        if(reg[REG_PC_CONTROL] & PC_CONTROL_TIMER_INTERRUPT_ENABLE)
+            interruptRun(reg[REG_TIMER_VECTOR]);
+    }
+    if(reg[REG_PC_CONTROL]& PC_CONTROL_SPI_ENABLE){
+        if(interchangeBit(reg[REG_SPI_DATA])){
+            reg[REG_PC_STATUS] |= PC_STATUS_SPI_FLAG;
+            reg[REG_PC_CONTROL] &= ~PC_CONTROL_SPI_ENABLE;
+            if(reg[REG_PC_CONTROL] & PC_CONTROL_SPI_INTERRUPT_ENABLE)
+                interruptRun(reg[REG_SPI_VECTOR]);        
+        }else{
+            reg[REG_PC_STATUS] &= ~PC_STATUS_SPI_FLAG;
+        }
+    }
     return true;
 }
 
@@ -196,6 +227,7 @@ bool runOneStep(unsigned char ch){
         }
     }
 
+    delay();
 
     unsigned char &ncmd = reg[REG_PROGRAM_COUNTER];
     if(memory[ncmd]==0x01)return false;
@@ -237,6 +269,6 @@ bool runOneStep(unsigned char ch){
         default: reg[REG_PC_STATUS] |= PC_STATUS_NODEFINE_COMMAND | PC_STATUS_CRITICAL_ERROR;
     }
     if(reg[REG_PC_STATUS] & PC_STATUS_CRITICAL_ERROR) return false;
-    return delay();
+    return true;
 }
 

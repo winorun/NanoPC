@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 //#include <gui_sdl.h>
+#include <spi.h>
 
 namespace po=boost::program_options;
 

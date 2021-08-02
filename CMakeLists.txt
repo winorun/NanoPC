@@ -59,6 +59,6 @@ target_link_libraries(${PROJECT_NAME}
 
 file (GLOB TESTS_SOURCES test/*.cpp)
 set (TEST test_${PROJECT_NAME})
-add_executable (${TEST} ${TESTS_SOURCES} src/core.cpp)
+add_executable (${TEST} ${TESTS_SOURCES} src/core.cpp src/spi.cpp)
 target_link_libraries (${TEST} ${Boost_LIBRARIES})
 add_test(NAME test1 COMMAND ${TEST})
